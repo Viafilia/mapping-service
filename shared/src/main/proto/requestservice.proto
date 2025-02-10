@@ -1,0 +1,96 @@
+syntax = "proto3";
+import "google/protobuf/empty.proto";
+package requestservice;
+option java_package = "at.tugraz.oop2";
+option java_multiple_files = true;
+option java_outer_classname = "RequestServiceProto";
+option java_generic_services = true;
+
+
+message Response {
+  optional string message = 1;
+  optional int64 error = 2;
+}
+
+message RoadParam{
+  string road = 1;
+  double bbox_tl_x = 2;
+  double bbox_tl_y = 3;
+  double bbox_br_x = 4;
+  double bbox_br_y = 5;
+  int64 take = 6;
+  int64 skip = 7;
+}
+
+message AmenityParam{
+  string amenity = 1;
+  double bbox_tl_x = 2;
+  double bbox_tl_y = 3;
+  double bbox_br_x = 4;
+  double bbox_br_y = 5;
+  double point_x = 6;
+  double point_y = 7;
+  double point_d = 8;
+  int64 take = 9;
+  int64 skip = 10;
+}
+
+message ById{
+  int64 id = 1;
+}
+
+message TileParam {
+  int32 z = 1;
+  int32 x = 2;
+  int32 y = 3;
+  repeated string layers = 4;
+}
+
+message TileResponse {
+  optional bytes image_data = 1;
+  optional int64 error = 2;
+}
+
+message LandUsageParameterProto {
+    double bbox_tl_x = 1;
+    double bbox_tl_y = 2;
+    double bbox_br_x = 3;
+    double bbox_br_y = 4;
+}
+
+message LandUsageEntryProto {
+    string type = 1;
+    double area = 2;
+    double share = 3;
+}
+
+message LandUsageProto {
+    double area = 1;
+    repeated LandUsageEntryProto entries = 2;
+}
+
+message RouteParameterProto {
+  int64 from = 1;
+  int64 to = 2;
+  string weighting = 3;
+}
+
+message RouteProto {
+  optional double length = 1;
+  optional double time = 2;
+  repeated string roads = 3;
+  int64 error = 4;
+}
+
+service RequestService{
+  rpc roads(RoadParam) returns (Response){};
+  rpc roadById(ById) returns (Response){};
+  rpc amenities(AmenityParam) returns (Response){};
+  rpc amenityById(ById) returns (Response){};
+
+  rpc renderTile(TileParam) returns (TileResponse){};
+
+  rpc landUsage(LandUsageParameterProto) returns (LandUsageProto){};
+
+  rpc route(RouteParameterProto) returns (RouteProto){}
+}
